@@ -90,7 +90,8 @@ pub fn process_initialize_group(
     // Allocate a TLV entry for the space and write it in
     // Assumes that there's enough SOL for the new rent-exemption
     let group = TokenGroup::new(mint_info.key, data.update_authority, data.max_size.into());
-    alloc_and_serialize::<Mint, TokenGroup>(group_info, &group, false)?;
+    unimplemented!(); // todo
+    // alloc_and_serialize::<Mint, TokenGroup>(group_info, &group, false)?;
 
     Ok(())
 }
@@ -201,7 +202,8 @@ pub fn process_initialize_member(_program_id: &Pubkey, accounts: &[AccountInfo])
 
     // Allocate a TLV entry for the space and write it in
     let member = TokenGroupMember::new(member_mint_info.key, group_info.key, member_number);
-    alloc_and_serialize::<Mint, TokenGroupMember>(member_info, &member, false)?;
+    unimplemented!(); // todo
+    // alloc_and_serialize::<Mint, TokenGroupMember>(member_info, &member, false)?;
 
     Ok(())
 }
