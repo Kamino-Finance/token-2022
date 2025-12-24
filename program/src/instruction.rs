@@ -700,6 +700,14 @@ pub enum TokenInstruction<'a> {
     /// for further details about the extended instructions that share this
     /// instruction prefix
     GroupMemberPointerExtension,
+    /// Instruction prefix for instructions to the confidential-mint-burn
+    /// extension
+    ConfidentialMintBurnExtension,
+    /// Instruction prefix for instructions to the scaled ui amount
+    /// extension
+    ScaledUiAmountExtension,
+    /// Instruction prefix for instructions to the pausable extension
+    PausableExtension,
 }
 impl<'a> TokenInstruction<'a> {
     /// Unpacks a byte buffer into a
@@ -842,6 +850,9 @@ impl<'a> TokenInstruction<'a> {
             39 => Self::MetadataPointerExtension,
             40 => Self::GroupPointerExtension,
             41 => Self::GroupMemberPointerExtension,
+            42 => Self::ConfidentialMintBurnExtension,
+            43 => Self::ScaledUiAmountExtension,
+            44 => Self::PausableExtension,
             _ => return Err(TokenError::InvalidInstruction.into()),
         })
     }
@@ -1013,6 +1024,15 @@ impl<'a> TokenInstruction<'a> {
             }
             &Self::GroupMemberPointerExtension => {
                 buf.push(41);
+            }
+            &Self::ConfidentialMintBurnExtension => {
+                buf.push(42);
+            }
+            &Self::ScaledUiAmountExtension => {
+                buf.push(43);
+            }
+            &Self::PausableExtension => {
+                buf.push(44);
             }
         };
         buf

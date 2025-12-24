@@ -9,7 +9,9 @@ use {
     solana_security_txt::security_txt,
 };
 
+#[cfg(not(feature = "no-entrypoint"))]
 solana_program::entrypoint!(process_instruction);
+
 fn process_instruction(
     program_id: &Pubkey,
     accounts: &[AccountInfo],

@@ -20,7 +20,9 @@ use {
             metadata_pointer::MetadataPointer,
             mint_close_authority::MintCloseAuthority,
             non_transferable::{NonTransferable, NonTransferableAccount},
+            pausable::{PausableAccount, PausableConfig},
             permanent_delegate::PermanentDelegate,
+            scaled_ui_amount::ScaledUiAmountConfig,
             transfer_fee::{TransferFeeAmount, TransferFeeConfig},
             transfer_hook::{TransferHook, TransferHookAccount},
         },
@@ -70,10 +72,14 @@ pub mod metadata_pointer;
 pub mod mint_close_authority;
 /// Non Transferable extension
 pub mod non_transferable;
+/// Pausable extension
+pub mod pausable;
 /// Permanent Delegate extension
 pub mod permanent_delegate;
 /// Utility to reallocate token accounts
 pub mod reallocate;
+/// Scaled UI Amount extension
+pub mod scaled_ui_amount;
 /// Token-group extension
 pub mod token_group;
 /// Token-metadata extension
@@ -961,6 +967,14 @@ pub enum ExtensionType {
     GroupMemberPointer,
     /// Mint contains token group member configurations
     TokenGroupMember,
+    /// Mint allowing the minting and burning of confidential tokens
+    ConfidentialMintBurn,
+    /// Tokens whose UI amount is scaled by a given amount
+    ScaledUiAmount,
+    /// Tokens where minting / burning / transferring can be paused
+    Pausable,
+    /// Indicates that the account belongs to a pausable mint
+    PausableAccount,
     /// Test variable-length mint extension
     #[cfg(test)]
     VariableLenMintTest = u16::MAX - 2,
@@ -1041,6 +1055,10 @@ impl ExtensionType {
             ExtensionType::TokenGroup => pod_get_packed_len::<TokenGroup>(),
             ExtensionType::GroupMemberPointer => pod_get_packed_len::<GroupMemberPointer>(),
             ExtensionType::TokenGroupMember => pod_get_packed_len::<TokenGroupMember>(),
+            ExtensionType::ConfidentialMintBurn => unimplemented!(), // todo
+            ExtensionType::ScaledUiAmount => pod_get_packed_len::<ScaledUiAmountConfig>(),
+            ExtensionType::Pausable => pod_get_packed_len::<PausableConfig>(),
+            ExtensionType::PausableAccount => pod_get_packed_len::<PausableAccount>(),
             #[cfg(test)]
             ExtensionType::AccountPaddingTest => pod_get_packed_len::<AccountPaddingTest>(),
             #[cfg(test)]
@@ -1104,7 +1122,10 @@ impl ExtensionType {
             | ExtensionType::GroupPointer
             | ExtensionType::TokenGroup
             | ExtensionType::GroupMemberPointer
-            | ExtensionType::TokenGroupMember => AccountType::Mint,
+            | ExtensionType::ConfidentialMintBurn
+            | ExtensionType::TokenGroupMember
+            | ExtensionType::ScaledUiAmount
+            | ExtensionType::Pausable => AccountType::Mint,
             ExtensionType::ImmutableOwner
             | ExtensionType::TransferFeeAmount
             | ExtensionType::ConfidentialTransferAccount
@@ -1112,7 +1133,8 @@ impl ExtensionType {
             | ExtensionType::NonTransferableAccount
             | ExtensionType::TransferHookAccount
             | ExtensionType::CpiGuard
-            | ExtensionType::ConfidentialTransferFeeAmount => AccountType::Account,
+            | ExtensionType::ConfidentialTransferFeeAmount
+            | ExtensionType::PausableAccount => AccountType::Account,
             #[cfg(test)]
             ExtensionType::VariableLenMintTest => AccountType::Mint,
             #[cfg(test)]
@@ -1136,6 +1158,9 @@ impl ExtensionType {
                 }
                 ExtensionType::TransferHook => {
                     account_extension_types.push(ExtensionType::TransferHookAccount);
+                }
+                ExtensionType::Pausable => {
+                    account_extension_types.push(ExtensionType::PausableAccount);
                 }
                 #[cfg(test)]
                 ExtensionType::MintPaddingTest => {
