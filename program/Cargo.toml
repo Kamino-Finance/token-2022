@@ -27,13 +27,13 @@ num_enum = "0.7.1"
 solana-program = "1.17.6"
 solana-security-txt = "1.1.1"
 solana-zk-token-sdk = "1.17.6"
-spl-memo = { version = "4.0.0", path = "../../memo/program", features = [ "no-entrypoint" ] }
-spl-token = { version = "4.0",  path = "../program", features = ["no-entrypoint"] }
-spl-token-group-interface = { version = "0.1.0", path = "../../token-group/interface" }
-spl-token-metadata-interface = { version = "0.2.0", path = "../../token-metadata/interface" }
-spl-transfer-hook-interface = { version = "0.3.0", path = "../transfer-hook/interface" }
-spl-type-length-value = { version = "0.3.0", path = "../../libraries/type-length-value" }
-spl-pod = { version = "0.1.0", path = "../../libraries/pod" }
+spl-memo = { version = "4.0.0", features = [ "no-entrypoint" ] }
+spl-token = { version = "4.0", features = ["no-entrypoint"] }
+spl-token-group-interface = { version = "0.1.0" }
+spl-token-metadata-interface = { version = "0.2.0" }
+spl-transfer-hook-interface = { version = "0.3.0" }
+spl-type-length-value = { version = "0.3.0" }
+spl-pod = { version = "0.1.0" }
 thiserror = "1.0"
 serde = { version = "1.0.193", optional = true }
 serde_with = { version = "3.4.0", optional = true }

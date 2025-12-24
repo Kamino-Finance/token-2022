@@ -1,6 +1,6 @@
 [workspace]
 resolver = "2"
-members = ["clients/rust"]
+members = ["program"]
 
 [workspace.metadata.cli]
 solana = "1.18.18"
